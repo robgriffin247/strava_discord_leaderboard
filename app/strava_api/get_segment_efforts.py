@@ -1,7 +1,8 @@
 import httpx
 import os
 from dotenv import load_dotenv
-import pprint as pp
+import datetime
+import pandas as pd
 
 load_dotenv()
 
@@ -10,24 +11,27 @@ def get_segment_efforts(id):
 
     content = []
 
+    # TODO - resolve pagination
     for page in range(1, 2):
 
         response = httpx.get(f"https://www.strava.com/api/v3/segment_efforts?segment_id={id}", 
                              headers={"Authorization":f"Bearer {os.getenv('strava_access_token')}"},
-                             params={"per_page":5, "page":page})
+                             params={"per_page":200, "page":page})
     
         response.raise_for_status
     
         content = content + response.json()
 
-    return content
+    output = {
+        'segment_name': content[0]["name"],
+        'efforts': len(content),
+        'data': pd.DataFrame({
+            'effort_date': [effort["start_date"] for effort in content],
+            'seconds': [effort["elapsed_time"] for effort in content],
+            'times': [str(datetime.timedelta(seconds=effort["elapsed_time"]))  for effort in content]
+        }),
+    }
 
-
-#data = get_segment_efforts("4458166")
-data = get_segment_efforts("17267489")
-
-
-effort_ids = [effort["start_date"] for effort in data]
-print(len(data))
-pp.pprint(effort_ids, indent=2)
+    return output
+    
 

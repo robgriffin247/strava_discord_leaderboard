@@ -15,5 +15,3 @@ def get_athlete():
     content = response.content
 
     return content
-
-print(get_athlete())
