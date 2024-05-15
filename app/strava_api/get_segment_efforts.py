@@ -10,7 +10,7 @@ def get_segment_efforts(id):
 
     content = []
 
-    for page in range(1, 3):
+    for page in range(1, 2):
 
         response = httpx.get(f"https://www.strava.com/api/v3/segment_efforts?segment_id={id}", 
                              headers={"Authorization":f"Bearer {os.getenv('strava_access_token')}"},
