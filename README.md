@@ -1,0 +1,1 @@
+# Strava Segments Leaderboard to Discord/n/nUse the Strava API to collect effort counts and PR times for segments on Strava for associated users, then generate a leaderboard generating bot in discord.
