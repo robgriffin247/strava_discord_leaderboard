@@ -14,6 +14,8 @@ Use the Strava API to collect effort counts and PR times for segments on Strava 
 
 ### Example output from get_segment_efforts()
 
+Example:
+
 ```
 { 'athlete_id': 1036361,
   'athlete_name': 'Robert Griffin',
