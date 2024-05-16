@@ -35,13 +35,13 @@ def get_segment_efforts(id=17267489, window=90, since="1970-01-01"):
             'id': athlete_details['id']   
         },
         'segment': {
-            'segment_name': content[0]["name"],
-            'segment_id': content[0]["segment"]["id"]
+            'name': content[0]["name"],
+            'id': content[0]["segment"]["id"]
         },
         'efforts': {
             'all_time': len(content)
         },
-        'z_data': pd.DataFrame({
+        'data': pd.DataFrame({
             'effort_id': [effort["id"] for effort in content],
             'effort_datetime': [datetime.strptime(effort["start_date"], "%Y-%m-%dT%H:%M:%SZ") for effort in content],
             'activity_id': [effort["activity"]["id"] for effort in content],
@@ -52,13 +52,13 @@ def get_segment_efforts(id=17267489, window=90, since="1970-01-01"):
         'bests': {}
     }
 
-    output["bests"]["all_time"] = output["z_data"]["time"][0]
-    output["bests"]["window"] = output["z_data"].loc[output["z_data"]["days_since"]<=window]["time"].iloc[0]
-    output["bests"]["since"] = output["z_data"].loc[output["z_data"]["effort_datetime"]>=datetime.strptime(f"{since}T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")]["time"].iloc[0]
+    output["bests"]["all_time"] = output["data"]["time"][0]
+    output["bests"]["window"] = output["data"].loc[output["data"]["days_since"]<=window]["time"].iloc[0]
+    output["bests"]["since"] = output["data"].loc[output["data"]["effort_datetime"]>=datetime.strptime(f"{since}T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")]["time"].iloc[0]
     
-    output["efforts"]["window"] = len(output["z_data"].loc[output["z_data"]["days_since"]<=window])
-    output["efforts"]["since"] = len(output["z_data"].loc[output["z_data"]["effort_datetime"]>=datetime.strptime(f"{since}T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")])
+    output["efforts"]["window"] = len(output["data"].loc[output["data"]["days_since"]<=window])
+    output["efforts"]["since"] = len(output["data"].loc[output["data"]["effort_datetime"]>=datetime.strptime(f"{since}T00:00:00Z", "%Y-%m-%dT%H:%M:%SZ")])
     
-    #output["most_efforts_in_one_activity"] = output["z_data"].groupby("activity_id").size().max()
+    #output["most_efforts_in_one_activity"] = output["data"].groupby("activity_id").size().max()
 
     return output
