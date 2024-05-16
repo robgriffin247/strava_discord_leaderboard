@@ -15,7 +15,7 @@ def get_access_token():
 
     return response.json()["access_token"]
 
-def get_refresh_token():
+def refresh_token():
     response = httpx.post("https://www.strava.com/oauth/token?",
                           data={
                               "client_id": os.getenv('strava_client_id'),
@@ -24,4 +24,4 @@ def get_refresh_token():
                               "grant_type": "refresh_token"
                           })
 
-    return response.json()["refresh_token"]
+    return response.json()["access_token"]

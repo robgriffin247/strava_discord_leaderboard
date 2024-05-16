@@ -1,5 +1,9 @@
-from strava_api.get_athlete import get_athlete
-from strava_api.get_segment_efforts import get_segment_efforts
+import pprint as pp
 
-print(get_athlete())
-print(get_segment_efforts("17267489"))
+from strava_api.src.get_athlete_details import get_athlete_details
+from strava_api.src.get_segment_efforts import get_segment_efforts
+
+pp.pprint(get_athlete_details(), indent=2)
+pp.pprint(get_segment_efforts(), indent=2)
+
+    
