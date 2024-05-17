@@ -8,31 +8,31 @@ To give an idea, the message into discord would look something like:
 
 
 ```
-Segment: Alpe du Zwift
+=============================================================================== 
+### Alpe du Zwift
 
-All-Time Leaderboard:
-  
+-------------------------------------------------------------------------------
+All-Time Leaderboard
   Best Time
     1. 0:48:21 Rob Griffin
     2. 0:52:45 Fredi S
     3. 1:02:12 Bobby X
-    
   Most Efforts
     1= 50 Rob Griffin
     1= 50 Fredi S
     3. 42 Bobby X
 
+-------------------------------------------------------------------------------
 90-day Leaderboard:
-
   Best Time
     1. 0:49:49 Rob Griffin
     2. 0:54:22 Fredi S
     3. 1:04:15 Bobby X
-    
   Most Efforts
     1= 12 Rob Griffin
     1=  8 Fredi S
     3.  3 Bobby X
+===============================================================================
 ```
 
 
