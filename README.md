@@ -80,7 +80,7 @@ I have stored the api address in the .env file in case the address changes in th
 
 The response will look a bit like this:
 
-```json
+```python
 { 'badge_type_id': 1,
   'bio': 'Instagram - Griffinevo3782',
   'city': 'Vänersborg',
