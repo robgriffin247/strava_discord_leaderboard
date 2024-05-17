@@ -6,7 +6,7 @@ from strava_api.get_tokens import refresh_token
 
 load_dotenv()
 
-def get_activities():
+def get_activities(one_page=False):
 
     activities = []
     activities_on_page = 200
@@ -27,9 +27,14 @@ def get_activities():
         
         response.raise_for_status
         
-        activities_on_page = len(response.json())
+        if one_page:
+            activities_on_page = 0
+        else:
+            activities_on_page = len(response.json())
 
         activities = activities + response.json()
+
+
 
     return activities
 

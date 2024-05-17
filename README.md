@@ -47,6 +47,19 @@ Use the Strava API to collect effort counts and PR times for segments on Strava 
   
 1.  Store the access and refresh tokens in the .env file
 
+This is what I have in my .env file:
+
+```
+strava_api_address=https://www.strava.com/api/v3/
+
+strava_client_id=******************************************
+strava_client_secret=**************************************
+
+strava_authorization_code=********************************* 
+
+strava_access_token=***************************************
+strava_refresh_token=**************************************
+```
 
 
 ### Making a request
