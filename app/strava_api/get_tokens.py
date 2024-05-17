@@ -1,10 +1,10 @@
 import httpx
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, set_key, find_dotenv
 
 load_dotenv()
 
-def get_access_token():
+def get_tokens():
     response = httpx.post("https://www.strava.com/oauth/token?",
                           data={
                               "client_id": os.getenv("strava_client_id"),
@@ -13,7 +13,8 @@ def get_access_token():
                               "grant_type": "authorization_code"
                           })
 
-    return response.json()["access_token"]
+    return response.json()
+
 
 def refresh_token():
     response = httpx.post("https://www.strava.com/oauth/token?",
@@ -23,5 +24,5 @@ def refresh_token():
                               "refresh_token": os.getenv('strava_refresh_token'),
                               "grant_type": "refresh_token"
                           })
-
-    return response.json()["access_token"]
+    
+    return response.json()

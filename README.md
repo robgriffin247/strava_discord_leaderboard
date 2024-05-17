@@ -5,71 +5,127 @@
 Use the Strava API to collect effort counts and PR times for segments on Strava for associated users, then generate a leaderboard generating bot in discord.
 
 
-### Ongoing tasks
 
-- Create python code to collect counts and prs for a given segment and rider
-    - Segment efforts, added count and best for custom window (e.g. 90 day) and custom since (e.g. since 2024-01-01)
-- POC with Alpe du Zwift (id: 17267489) where I should have 50 efforts and a PR of 48:21
-- Integrate with other athletes (team or manual ids)
+### Components
 
-### Example output from get_segment_efforts()
+- Code to extract best times and effort counts for connected athletes on a given segment, including all time, sliding window (e.g. last 90 days) and efforts since (e.g. since January 1st 2024). This data will be used to generate a leaderboard.
+  - Status: The `get_segment_efforts()` function is limited by pagination issues - currently working on lifting all efforts via activities.
+- Strava authorization to other athletes.
+  - Status: App has been approved for multiple users, need to get users to authorize to allow testing.
+- Code to push leaderboards to Discord on request.
+  - Status: Not started.
 
-Example:
 
+
+### Setup
+
+1. Create Strava App (Strava > Settings > My API Application)
+
+1. Get authorization code
+  1. Get your client ID and client secret from the Strava My API Application page, and add to a .env file
+  1. Exchange your client id into this url; note the scope=`activity:read_all` grants access to all activity data including hidden start/finishes etc. ([read more](https://developers.strava.com/docs/authentication/)).
+  `http://www.strava.com/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=activity:read_all`
+  1. Follow the link and authorize the app
+  1. Copy the authorization code from the url you are directed to and store in the .env file
+
+1. Exchange the authorization code for access and refresh tokens
+
+    ```python
+    def get_tokens():
+        response = httpx.post("https://www.strava.com/oauth/token?",
+                              data={
+                                  "client_id": os.getenv("strava_client_id"),
+                                  "client_secret": os.getenv("strava_client_secret"),
+                                  "code": os.getenv("strava_authorization_code"),
+                                  "grant_type": "authorization_code"
+                              }
+
+        return response.json()
+
+    print(get_tokens())
+    ```
+  
+1.  Store the access and refresh tokens in the .env file
+
+
+
+### Making a request
+
+The following code makes a request to get the details of the authorized athlete. Read about all available endpoints [here](https://developers.strava.com/docs/reference/).
+
+```python
+import httpx
+import os
+from dotenv import load_dotenv
+from strava_api.get_tokens import refresh_token
+
+load_dotenv()
+
+def get_athlete_details():
+
+    access_token = refresh_token()["access_token"]
+
+    response = httpx.get(f"{os.getenv('strava_api_address')}athlete",
+                        headers={"Authorization":f"Bearer {access_token}"}
+                        )
+    
+    response.raise_for_status
+    
+    content = response.json()
+
+    return content
 ```
-{ 'athlete': {'id': 1036361, 'name': 'Robert Griffin'},
-  'bests': {'all_time': '0:48:21', 'since': '0:49:49', 'window': '0:57:54'},
-  'data':               effort_id     effort_datetime  activity_id  days_since  seconds     time
-0   3032029963899552030 2022-11-27 18:22:53   8177489438         535     2901  0:48:21
-1   3021524860190725168 2022-10-29 18:36:51   8038860366         564     2972  0:49:32
-2   3211768482366683686 2024-04-06 18:02:52  11121662240          39     2989  0:49:49
-3   3016432283688829496 2022-10-15 17:21:24   7968152592         578     2996  0:49:56
-4   2992150114042018714 2022-08-09 17:10:16   7610432936         645     3036  0:50:36
-5   2981277794952272812 2022-07-10 17:04:29   7447676833         675     3051  0:50:51
-6   2976204285132872336 2022-06-26 17:04:00   7373341206         689     3057  0:50:57
-7   3010637013099375904 2022-09-29 17:35:10   7886329205         594     3190  0:53:10
-8   2940738689225952506 2022-03-20 20:10:05   6856454624         787     3219  0:53:39
-9   3043629499643773074 2022-12-29 18:25:09   8308472737         503     3220  0:53:40
-10  2974034747978538826 2022-06-20 17:12:45   7340766237         695     3224  0:53:44
-11  3208513901902703324 2024-03-28 18:13:49  11057205394          48     3253  0:54:13
-12  3180977813288845130 2024-01-12 18:35:04  10545508845         124     3284  0:54:44
-13  2986355558637362292 2022-07-24 17:22:34   7522675259         661     3293  0:54:53
-14  2934541919751070128 2022-03-03 18:00:53   6768059393         804     3300  0:55:00
-15  2996142773878784804 2022-08-20 17:34:12   7671408326         634     3329  0:55:29
-16  2939988195945207592 2022-03-18 18:31:44   6844569782         789     3337  0:55:37
-17  2971857460459568704 2022-06-14 17:06:38   7308764593         701     3337  0:55:37
-18  2996501532641611068 2022-08-21 17:17:23   7677338232         633     3357  0:55:57
-19  3183878994681556404 2024-01-20 18:38:15  10596877914         116     3381  0:56:21
-20  3185202431307464586 2024-01-24 10:24:12  10619421689         113     3392  0:56:32
-21  2930920841372286154 2022-02-21 17:58:21   6717526698         814     3409  0:56:49
-22  2917936480917794070 2022-01-16 20:34:24   6535786304         850     3459  0:57:39
-23  3221909439197553504 2024-05-04 17:32:02  11332506647          11     3474  0:57:54
-24  2932373155780478400 2022-02-25 18:10:09   6737230911         810     3487  0:58:07
-25  2997230463931014184 2022-08-23 17:38:22   7688123180         631     3507  0:58:27
-26  3192077596902367604 2024-02-12 09:46:21  10745864948          94     3544  0:59:04
-27  2950840805734542042 2022-04-17 17:19:10   6998215241         759     3548  0:59:08
-28  3213096088528240536 2024-04-10 09:48:32  11148428793          36     3559  0:59:19
-29  3219737481880755254 2024-04-28 17:29:32  11286220744          17     3586  0:59:46
-30  2909179641387006492 2021-12-23 18:04:09   6419713950         874     3592  0:59:52
-31  2962477298156825450 2022-05-19 19:02:38   7170925220         727     3595  0:59:55
-32  3219375688961786020 2024-04-27 17:30:28  11277963187          18     3595  0:59:55
-33  2912442534191979668 2022-01-01 18:01:25   6457434366         865     3611  1:00:11
-34  2907366289468667420 2021-12-18 18:00:06   6399853200         879     3659  1:00:59
-35  3191844010682730392 2024-02-11 18:13:31  10743119161          94     3661  1:01:01
-36  3214662812483495074 2024-04-14 17:24:07  11183231897          31     3682  1:01:22
-37  3168658864121355008 2023-12-09 18:40:30  10354768031         158     3709  1:01:49
-38  3203487728312133884 2024-03-14 19:58:36  10961277592          62     3823  1:03:43
-39  2905917001868390314 2021-12-14 18:02:27   6383990187         883     3864  1:04:24
-40  2920824189219993288 2022-01-24 21:09:56   6576494201         842     3879  1:04:39
-41  2964285122858963650 2022-05-24 19:14:01   7197257495         722     3953  1:05:53
-42  3190786216284891788 2024-02-08 20:10:27  10723774169          97     4046  1:07:26
-43  3086054407851294258 2023-04-25 19:18:20   8956960889         386     4086  1:08:06
-44  3223739866346900638 2024-05-09 18:35:51  11372297108           6     4110  1:08:30
-45  3195850129980591604 2024-02-22 19:31:03  10816418887          83     4291  1:11:31
-46  3203487728312956156 2024-03-14 21:14:22  10961277592          62     4567  1:16:07
-47  2954881251084353384 2022-04-28 20:23:54   7056896411         748     4832  1:20:32
-48  2917936480920549654 2022-01-16 21:46:52   6535786304         850     5050  1:24:10
-49  3202742259425623016 2024-03-12 19:42:53  10946316742          64     5172  1:26:12,
-  'efforts': {'all_time': 50, 'since': 18, 'window': 4},
-  'segment': {'id': 17267489, 'name': 'Alpe du Zwift'}}
+
+I have stored the api address in the .env file in case the address changes in the future; the current address is *https://www.strava.com/api/v3/*. Note that the function will also make a request to refresh the access token every time it is run, even if the token is not expired; I will add functionality to check expiration to reduce excess requests. 
+
+The response will look a bit like this:
+
+```json
+{ 'badge_type_id': 1,
+  'bio': 'Instagram - Griffinevo3782',
+  'city': 'Vänersborg',
+  'country': 'Sweden',
+  'created_at': '2012-08-27T17:11:15Z',
+  'firstname': 'Robert',
+  ...
+}  
+```
+
+Pagination will probably be needed to return all activities by the user:
+
+```python
+import httpx
+import os
+from dotenv import load_dotenv
+
+from strava_api.get_tokens import refresh_token
+
+load_dotenv()
+
+def get_activities():
+
+    activities = []
+    activities_on_page = 200
+    page = 0
+
+    access_token = refresh_token()["access_token"]
+
+    while activities_on_page==200:
+        page += 1
+        
+        print(f"Getting page {page}")
+        
+        response = httpx.get(f"{os.getenv('strava_api_address')}athlete/activities",
+                            headers={"Authorization":f"Bearer {access_token}"},
+                            params={"page":page, "per_page":200},
+                            timeout=60
+                            )
+        
+        response.raise_for_status
+        
+        activities_on_page = len(response.json())
+
+        activities = activities + response.json()
+
+    return activities
 ```

@@ -11,10 +11,10 @@ import pandas as pd
 load_dotenv()
 
 
-def get_segment_efforts(id=17267489, window=90, since="1970-01-01"):
+def get_segment_efforts(id=17267489, window=365*50, since="1970-01-01"):
 
     content = []
-    access_token = refresh_token()
+    access_token = refresh_token()["access_token"]
 
     athlete_details = get_athlete_details()
     
