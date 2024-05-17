@@ -4,14 +4,14 @@
 
 Use the Strava API to collect effort counts and PR times for segments on Strava for associated users, then generate a leaderboard generating bot in discord.
 
-To give an idea, the message into discord would look something like:
+To give an idea, the message into discord could look something like:
 
 
 ```
-=============================================================================== 
+======================================== 
 ### Alpe du Zwift
 
--------------------------------------------------------------------------------
+----------------------------------------
 All-Time Leaderboard
   Best Time
     1. 0:48:21 Rob Griffin
@@ -22,7 +22,7 @@ All-Time Leaderboard
     1= 50 Fredi S
     3. 42 Bobby X
 
--------------------------------------------------------------------------------
+----------------------------------------
 90-day Leaderboard:
   Best Time
     1. 0:49:49 Rob Griffin
@@ -32,7 +32,8 @@ All-Time Leaderboard
     1. 12 Rob Griffin
     2.  8 Fredi S
     3.  3 Bobby X
-===============================================================================
+
+========================================
 ```
 
 
