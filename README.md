@@ -4,6 +4,36 @@
 
 Use the Strava API to collect effort counts and PR times for segments on Strava for associated users, then generate a leaderboard generating bot in discord.
 
+To give an idea, the message into discord would look something like:
+
+
+```
+Segment: Alpe du Zwift
+
+All-Time Leaderboard:
+  
+  Best Time
+    1. 0:48:21 Rob Griffin
+    2. 0:52:45 Fredi S
+    3. 1:02:12 Bobby X
+    
+  Most Efforts
+    1= 50 Rob Griffin
+    1= 50 Fredi S
+    3. 42 Bobby X
+
+90-day Leaderboard:
+
+  Best Time
+    1. 0:49:49 Rob Griffin
+    2. 0:54:22 Fredi S
+    3. 1:04:15 Bobby X
+    
+  Most Efforts
+    1= 12 Rob Griffin
+    1=  8 Fredi S
+    3.  3 Bobby X
+```
 
 
 ### Components
@@ -51,12 +81,9 @@ This is what I have in my .env file:
 
 ```
 strava_api_address=https://www.strava.com/api/v3/
-
 strava_client_id=******************************************
 strava_client_secret=**************************************
-
 strava_authorization_code=********************************* 
-
 strava_access_token=***************************************
 strava_refresh_token=**************************************
 ```
