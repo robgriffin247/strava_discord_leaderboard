@@ -29,8 +29,8 @@ All-Time Leaderboard
     2. 0:54:22 Fredi S
     3. 1:04:15 Bobby X
   Most Efforts
-    1= 12 Rob Griffin
-    1=  8 Fredi S
+    1. 12 Rob Griffin
+    2.  8 Fredi S
     3.  3 Bobby X
 ===============================================================================
 ```
