@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
 from strava_api.get_tokens import refresh_token
-from strava_api.get_athlete_details import get_athlete_details
+from app.strava_api.athletes import get_athlete_details
 import pandas as pd
 
 load_dotenv()

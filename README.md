@@ -47,6 +47,10 @@ All-Time Leaderboard
   - Status: Not started.
 
 
+### Current:
+
+- Convert to a more oop style; classes of athlete, activity, segment, effort?
+
 
 ### Setup
 

@@ -38,3 +38,18 @@ def get_activities(one_page=False):
 
     return activities
 
+
+
+def get_activity(id):
+
+    access_token = refresh_token()["access_token"]
+
+    response = httpx.get(f"{os.getenv('strava_api_address')}activity/{id}",
+                        headers={"Authorization":f"Bearer {access_token}"}
+                        )
+    
+    response.raise_for_status
+    
+    content = response.json()
+
+    return content
