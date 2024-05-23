@@ -44,7 +44,7 @@ def get_activity(id):
 
     access_token = refresh_token()["access_token"]
 
-    response = httpx.get(f"{os.getenv('strava_api_address')}activity/{id}",
+    response = httpx.get(f"{os.getenv('strava_api_address')}activities/{id}",
                         headers={"Authorization":f"Bearer {access_token}"}
                         )
     

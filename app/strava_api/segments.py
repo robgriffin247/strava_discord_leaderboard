@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
 from strava_api.get_tokens import refresh_token
-from app.strava_api.athletes import get_athlete_details
+from strava_api.athletes import get_athlete_details
 import pandas as pd
 
 load_dotenv()
@@ -19,11 +19,11 @@ def get_segment_efforts(id=17267489, window=365*50, since="1970-01-01"):
     athlete_details = get_athlete_details()
     
     # TODO - resolve pagination; currently works for <=200 effort segments
-    for page in range(1, 2):
+    for page in range(1, 3):
 
         response = httpx.get(f"{os.getenv('strava_api_address')}segment_efforts?segment_id={id}", 
                              headers={"Authorization":f"Bearer {access_token}"},
-                             params={"per_page":200, "page":page})
+                             params={"page":page})
     
         response.raise_for_status
     
